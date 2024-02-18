@@ -1,0 +1,27 @@
+{
+  "name": "core-outline",
+  "version": "1.0.0",
+  "description": "Connect your node JS application to Core&Outline",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TomiTsuma/core-outline-npm.git"
+  },
+  "keywords": [
+    "core",
+    "outline"
+  ],
+  "author": "Tsuma Thomas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TomiTsuma/core-outline-npm/issues"
+  },
+  "homepage": "https://github.com/TomiTsuma/core-outline-npm#readme",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "react-router-dom": "^6.22.1"
+  }
+}
