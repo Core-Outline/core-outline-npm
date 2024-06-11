@@ -1,0 +1,42 @@
+{
+  "name": "core-outline",
+  "version": "0.0.7",
+  "description": "NPM package for react",
+  "main": "./dist/index.js",
+  "module": "./dist/index.es.js",
+  "scripts": {
+    "build-lib": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Core-Outline/core-outline-npm.git"
+  },
+  "keywords": [
+    "core",
+    "outline"
+  ],
+  "author": "Core&Outline",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Core-Outline/core-outline-npm/issues"
+  },
+  "homepage": "https://github.com/Core-Outline/core-outline-npm#readme",
+  "dependencies": {
+    "socket.io-client": "^4.7.5",
+    "uuid": "^9.0.1",
+    "pouchdb": "^8.0.1"
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.24.6",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "pouchdb": "^8.0.1",
+    "rollup": "^2.79.1",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "socket.io-client": "^4.7.5",
+    "uuid": "^9.0.1"
+  }
+}
