@@ -10,6 +10,6 @@ export const targetReached = async(session_id) =>{
 }
 
 export const registerClick = async(session_id, item_id) =>{
-    streamData({"topic":"click-data", "session_id" : session_id, "item_id": item_id })
+    streamData({"topic":"click-data", "session_id" : session_id, "item_clicked": item_id })
 }
 

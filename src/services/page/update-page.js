@@ -9,13 +9,14 @@ const updatePage = async(session_id, location) =>{
     let page = {}
 
     page = {
+        "topic":"page-data",
         "session_id": session_id,
         "start_date": Date.now(),
         "end_date": null,
         "page_name": location,
     } 
 
-    streamData({"topic":"page-data", "data" : page })
+    streamData(page)
     return page
       
 }

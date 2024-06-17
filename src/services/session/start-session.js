@@ -32,16 +32,23 @@ async function getSessionLocation()
 
 const startSession = async() =>{
     let loc =  await getSessionLocation()
+    print(loc)
     let session = {
+        "topic":"session-data",
         "session_id": uuid.v4(),
         "start_time": Date.now(),
         "end_time" : null,
+        "latitude": loc?.lat,
+        "longitude": loc?.lng,
+        "country": loc?.country,
+        "region": loc?.regionName,
+        "city": loc?.city,
         "device": "getDeviceInfo()",
     }
     session = { ...session, ...loc}
     console.log(session)
 
-    streamData({"topic":"session-data", "data" : session })
+    streamData(session )
 
     return session
 }

@@ -8,7 +8,7 @@ export class CoreOutline {
       this.secret_id = secret_id;
       this.sessionDetails = startSession();
       this.startSession = startSession;
-      this.pageDetails = updatePage(this.sessionDetails?.session_id, {}, "");
+      this.pageDetails = updatePage(this.sessionDetails?.session_id, "");
       this.updatePage = updatePage;
       this.targetReached = targetReached;
       this.registerClick = registerClick;
