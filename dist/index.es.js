@@ -1,10 +1,10 @@
 const uuid = require('uuid');
 const {
-  io: io$2
+  io: io$3
 } = require('socket.io-client');
-const socket$2 = io$2('http://52.35.48.129:4000');
-function streamData$2(data) {
-  socket$2.emit('dataEvent', data);
+const socket$3 = io$3('http://52.35.48.129:4000');
+function streamData$3(data) {
+  socket$3.emit('dataEvent', data);
 }
 const makeRequest = async ({
   url,
@@ -13,12 +13,26 @@ const makeRequest = async ({
   params,
   method
 }) => {
-  const res = await fetch(url).then(function (response) {
-    return response.json();
-  }).then(function (json) {
-    console.log(json);
-    return json;
-  });
+  let res;
+  console.log(url);
+  console.log(params);
+  if (params) {
+    res = await fetch(`${url}${params}`).then(function (response) {
+      console.log(response);
+      return response.json();
+    }).then(function (json) {
+      console.log(json);
+      return json;
+    });
+  } else {
+    res = await fetch(`${url}`).then(function (response) {
+      console.log(response);
+      return response.json();
+    }).then(function (json) {
+      console.log(json);
+      return json;
+    });
+  }
   return res;
 };
 async function getSessionLocation() {
@@ -28,24 +42,54 @@ async function getSessionLocation() {
   });
   return res;
 }
-const startSession = async () => {
+async function getAppDetails(app_id) {
+  const res = await makeRequest({
+    url: "http://52.35.48.129:5000/data-source/get-data-source",
+    method: 'get',
+    params: `?type=saas&app_id=${app_id}`
+  });
+  return res;
+}
+const startSession = async app_id => {
   let loc = await getSessionLocation();
+  console.log(loc);
+  data_source = await getAppDetails(app_id);
+  console.log(data_source);
   let session = {
+    "topic": "session-data",
+    "data_source_id": data_source?.data_source_id,
     "session_id": uuid.v4(),
-    "start_time": Date.now(),
-    "end_time": null,
-    "device": "getDeviceInfo()"
-  };
-  session = {
-    ...session,
-    ...loc
+    "start_date": new Date(Date.now()).toDateString(),
+    "latitude": loc?.lat,
+    "longitude": loc?.lon,
+    "country": loc?.country,
+    "region": loc?.regionName,
+    "city": loc?.city,
+    "device": "getDeviceInfo"
   };
   console.log(session);
-  streamData$2({
-    "topic": "session-data",
-    "data": session
-  });
+  streamData$3(session);
   return session;
+};
+
+const {
+  io: io$2
+} = require('socket.io-client');
+const socket$2 = io$2('http://52.35.48.129:4000');
+function streamData$2(data) {
+  socket$2.emit('dataEvent', data);
+}
+const updatePage = async (session_id, location, is_terminal = false) => {
+  let page = {};
+  page = {
+    "topic": "page-data",
+    "session_id": session_id,
+    "start_date": new Date(Date.now()).toDateString(),
+    "page_name": location,
+    "is_terminal": is_terminal
+  };
+  streamData$2(page);
+  return page;
 };
 
 const {
@@ -55,19 +99,19 @@ const socket$1 = io$1('http://52.35.48.129:4000');
 function streamData$1(data) {
   socket$1.emit('dataEvent', data);
 }
-const updatePage = async (session_id, location) => {
-  let page = {};
-  page = {
-    "session_id": session_id,
-    "start_date": Date.now(),
-    "end_date": null,
-    "page_name": location
-  };
+const targetReached = async session_id => {
   streamData$1({
-    "topic": "page-data",
-    "data": page
+    "topic": "update-session-data",
+    "session_id": session_id,
+    "click_through": true
   });
-  return page;
+};
+const registerClick = async (session_id, item_id) => {
+  streamData$1({
+    "topic": "update-session-data",
+    "session_id": session_id,
+    "item_clicked": item_id
+  });
 };
 
 const {
@@ -77,33 +121,36 @@ const socket = io('http://52.35.48.129:4000');
 function streamData(data) {
   socket.emit('dataEvent', data);
 }
-const targetReached = async session_id => {
+const endSession = async (session_id, end_date) => {
   streamData({
-    "topic": "target-data",
-    "session_id": session_id
-  });
-};
-const registerClick = async (session_id, item_id) => {
-  streamData({
-    "topic": "click-data",
-    "session_id": session_id,
-    "item_id": item_id
+    topic: "update-session-data",
+    session_id,
+    end_date
   });
 };
 
 class CoreOutline {
-  constructor(access_key, secret_id) {
-    this.access_key = access_key;
-    this.secret_id = secret_id;
-    this.sessionDetails = startSession();
+  constructor(app_id) {
+    this.sessionDetails = startSession(app_id);
     this.startSession = startSession;
-    this.pageDetails = updatePage(this.sessionDetails?.session_id, {});
+    this.endSession = endSession;
+    this.pageDetails = updatePage(this.sessionDetails?.session_id, "");
     this.updatePage = updatePage;
     this.targetReached = targetReached;
     this.registerClick = registerClick;
   }
-  endSession() {
-    this.sessionDetails.end_time = Date.now();
+  endCurrentSession() {
+    this.sessionDetails.end_time = new Date(Date.now()).toDateString();
+    this.endSession(this.sessionDetails?.session_id, this.sessionDetails.end_time);
+  }
+  setCurrentPage(page_name, is_terminal = false) {
+    this.updatePage(this.sessionDetails?.session_id, page_name, is_terminal);
+  }
+  recordPurchase() {
+    this.targetReached(this.sessionDetails?.session_id);
+  }
+  recordItemClick(item_id) {
+    this.registerClick(this.sessionDetails?.session_id, item_id);
   }
 }
 

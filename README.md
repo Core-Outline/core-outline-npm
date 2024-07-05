@@ -9,7 +9,7 @@ npm i core-outline
 
 ### Starting a new instance
 
-var core = new CoreOutline(<access_id>, <secret_key>)
+var core = new CoreOutline(<app_id>)
 
 ### To get the session details
 var session_details = core.sessionDetails()
@@ -19,6 +19,9 @@ var session_details = core.sessionDetails()
     "session_id":"<session_id>",
 }
 """
+### End current session
+endCurrentSession()
+
 # Tracking user actions
 ### Update current page
 
@@ -36,7 +39,7 @@ core.recordPurchase()
 
 This function is to be used when a user clicks on one of the recommended actions items
 
-core.recordItemClick(<recommended_action_item_name>)
+core.recordItemClick(<recommended_action_item_id>)
 
 
 
