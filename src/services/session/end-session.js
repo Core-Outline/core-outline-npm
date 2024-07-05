@@ -1,20 +1,19 @@
-const request = require('../../lib/index.js')
-const { trackingConfigs, appConfigs } = require('../../config/index.js')
 
-const endSession = async(session_id, token) =>{
-    const res = await(
-        request({
-            url:  appConfigs.BASE_URL,
-            service: trackingConfigs.END_SESSION,
-            body: {
-                'session_id':session_id
-            },
-            method:'POST',
-            params:{
-                Authorization: `Bearer ${token}`
-            }
-        })
-    )
+const { io}  = require('socket.io-client');
+const socket = io('http://52.35.48.129:4000');
+
+function streamData(data){
+    socket.emit('dataEvent', data);
+  }
+
+const endSession = async(session_id, end_date) =>{
+    streamData({
+        topic:"update-session-data",
+        session_id,
+        end_date
+    })
 }
 
+
+// endSession('41d600e4-6c17-4626-bff4-8c173f904104', new Date(Date.now()).toLocaleString())
 export default endSession

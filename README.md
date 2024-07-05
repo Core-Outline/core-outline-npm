@@ -24,19 +24,19 @@ var session_details = core.sessionDetails()
 
 Use this function when a user enters a page:
 
-core.updatePage(session_details.session_id, <current_page_name>)
+core.setCurrentPage(<current_page_name>, <is_terminal>)
 
 ### Register a made purchase
 
 Add this function to an onclick listener for when a user completes a transaction
 
-core.targetReached(session_details.session_id)
+core.recordPurchase()
 
 ### Register an action item click
 
 This function is to be used when a user clicks on one of the recommended actions items
 
-core.registerClick(session_details.session_id, <recommended_action_item_name>)
+core.recordItemClick(<recommended_action_item_name>)
 
 
 

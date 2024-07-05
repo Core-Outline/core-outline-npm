@@ -1,7 +1,7 @@
-const makeRequest = async ({
+const makeRequest = async (
   url, service, body, params, method,
-}) => {
-    return await fetch(url)
+) => {
+    return await fetch(`${url}`)
     .then(function(response) {
     return response.json();
     })

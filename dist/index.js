@@ -6,7 +6,7 @@ const uuid = require('uuid');
 const {
   io: io$2
 } = require('socket.io-client');
-const socket$2 = io$2('http://localhost:4000');
+const socket$2 = io$2('http://52.35.48.129:4000');
 function streamData$2(data) {
   socket$2.emit('dataEvent', data);
 }
@@ -55,7 +55,7 @@ const startSession = async () => {
 const {
   io: io$1
 } = require('socket.io-client');
-const socket$1 = io$1('http://localhost:4000');
+const socket$1 = io$1('http://52.35.48.129:4000');
 function streamData$1(data) {
   socket$1.emit('dataEvent', data);
 }
@@ -77,7 +77,7 @@ const updatePage = async (session_id, location) => {
 const {
   io
 } = require('socket.io-client');
-const socket = io('http://localhost:4000');
+const socket = io('http://52.35.48.129:4000');
 function streamData(data) {
   socket.emit('dataEvent', data);
 }
